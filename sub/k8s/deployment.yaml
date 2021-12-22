@@ -17,9 +17,9 @@ spec:
       containers:
       - name: sub
         image: sub
-        env:
-        - name: SPRING_DATASOURCE_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: mysql-user-pass
-              key: username
+        # env:
+        # - name: SPRING_DATASOURCE_USERNAME
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: mysql-user-pass
+        #       key: username
