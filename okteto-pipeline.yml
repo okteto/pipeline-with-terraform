@@ -1,0 +1,10 @@
+deploy:
+  - echo "terraform apply"
+  - okteto build -t okteto.dev/pub:${OKTETO_GIT_COMMIT} pub
+  - okteto build -t okteto.dev/sub:${OKTETO_GIT_COMMIT} sub
+  - cd pub/k8s && kustomize edit set image pub=okteto.dev/pub:${OKTETO_GIT_COMMIT}
+  - cd sub/k8s && kustomize edit set image sub=okteto.dev/sub:${OKTETO_GIT_COMMIT}
+  - kubectl apply -k pub/k8s
+  - kubectl apply -k sub/k8s
+destroy:
+  - echo "destroying"
