@@ -1,3 +1,4 @@
+icon: https://github.com/okteto/pipeline-with-terraform/raw/main/icon.png
 deploy:
   - echo "terraform apply"
   - okteto build -t okteto.dev/pub:${OKTETO_GIT_COMMIT} pub
