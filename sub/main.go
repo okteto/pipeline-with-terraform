@@ -18,7 +18,7 @@ var (
 	messages   []string
 
 	// token is used to verify push requests.
-	token              = mustGetenv("PUBSUB_VERIFICATION_TOKEN")
+	token              = mustGetenv("PUBSUB_TOKEN")
 	googleCloudProject = mustGetenv("GOOGLE_CLOUD_PROJECT")
 	topicName          = mustGetenv("PUBSUB_TOPIC")
 )
