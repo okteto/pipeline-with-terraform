@@ -5,17 +5,8 @@ resources:
 - sub-deployment.yaml
 images:
 - name: pub
-  newName: okteto.dev/pub
-  newTag: a73c6e0bc65ba32d46838528415a699ec23f0e42
 - name: sub
-  newName: okteto.dev/sub
-  newTag: a73c6e0bc65ba32d46838528415a699ec23f0e42
 secretGenerator:
 - files:
   - credentials.json
   name: gcp-credentials
-- literals:
-  - pubsub-topic=topic-pchico83
-  - gcp-project-id=torq-335910
-  name: gcp-config
-  type: Opaque
