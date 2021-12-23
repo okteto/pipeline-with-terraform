@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"sync"
+	"time"
 
 	"cloud.google.com/go/pubsub"
 )
@@ -45,6 +46,7 @@ func main() {
 
 	for counter := 0; ; counter++ {
 		publish(ctx, counter)
+		time.Sleep(1 * time.Second)
 	}
 }
 
