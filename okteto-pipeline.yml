@@ -9,12 +9,12 @@ deploy:
   - terraform apply --auto-approve
   - okteto build -t okteto.dev/pub:${OKTETO_GIT_COMMIT} pub
   - okteto build -t okteto.dev/sub:${OKTETO_GIT_COMMIT} sub
-  - cd pub/k8s && kustomize edit set image pub=okteto.dev/pub:${OKTETO_GIT_COMMIT}
-  - cd sub/k8s && kustomize edit set image sub=okteto.dev/sub:${OKTETO_GIT_COMMIT}
-  - kubectl apply -k pub/k8s
-  - kubectl apply -k sub/k8s
+  - mv credentials.json k8s/credentials.json
+  - cd k8s && /usr/local/bin/kustomize edit set image pub=okteto.dev/pub:${OKTETO_GIT_COMMIT}
+  - cd k8s && /usr/local/bin/kustomize edit set image sub=okteto.dev/sub:${OKTETO_GIT_COMMIT}
+  - cd k8s && /usr/local/bin/kustomize edit add secret gcp-config --from-literal=pubsub-topic=topic-${OKTETO_NAMESPACE} --from-literal=gcp-project-id=${GCP_PROJECT_ID}
+  - kubectl apply -k k8s
 destroy:
-  - echo "destroying"
   - tfenv install min-required
   - tfenv use min-required
   - envsubst < template/terraform.auto.tfvars.tpl > terraform.auto.tfvars

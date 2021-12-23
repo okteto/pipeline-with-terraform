@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sub
+  labels:
+    app: sub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sub
+  template:
+    metadata:
+      labels:
+        app: sub
+    spec:
+      containers:
+      - name: sub
+        image: sub
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/gcp/sa.json
+        - name: GCP_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              name: gcp-config
+              key: gcp-project-id
+        - name: PUBSUB_TOPIC
+          valueFrom:
+            secretKeyRef:
+              name: gcp-config
+              key: pubsub-topic
+        volumeMounts:
+          - mountPath: "/etc/gcp"
+            name: gcp-config
+            readOnly: true
+      volumes:
+        - name: gcp-config
+          secret:
+            secretName: gcp-config
+            items:
+            - key: credentials.json
+              path: sa.json

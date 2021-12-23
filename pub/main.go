@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"sync"
+	"time"
 
 	"cloud.google.com/go/pubsub"
 )
@@ -18,8 +19,7 @@ var (
 	messages   []string
 
 	// token is used to verify push requests.
-	token              = mustGetenv("PUBSUB_TOKEN")
-	googleCloudProject = mustGetenv("GOOGLE_CLOUD_PROJECT")
+	googleCloudProject = mustGetenv("GCP_PROJECT_ID")
 	topicName          = mustGetenv("PUBSUB_TOPIC")
 )
 
@@ -47,6 +47,7 @@ func main() {
 
 	for counter := 0; ; counter++ {
 		publish(ctx, counter)
+		time.Sleep(1 * time.Second)
 	}
 }
 
