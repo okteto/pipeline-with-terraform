@@ -10,9 +10,9 @@ deploy:
   - okteto build -t okteto.dev/pub:${OKTETO_GIT_COMMIT} pub
   - okteto build -t okteto.dev/sub:${OKTETO_GIT_COMMIT} sub
   - mv credentials.json k8s/credentials.json
-  - cd k8s && /usr/local/bin/kustomize edit set image pub=okteto.dev/pub:${OKTETO_GIT_COMMIT}
-  - cd k8s && /usr/local/bin/kustomize edit set image sub=okteto.dev/sub:${OKTETO_GIT_COMMIT}
-  - cd k8s && /usr/local/bin/kustomize edit add secret gcp-config --from-literal=pubsub-topic=topic-${OKTETO_NAMESPACE} --from-literal=gcp-project-id=${GCP_PROJECT_ID}
+  - cd k8s && kustomize edit set image pub=okteto.dev/pub:${OKTETO_GIT_COMMIT}
+  - cd k8s && kustomize edit set image sub=okteto.dev/sub:${OKTETO_GIT_COMMIT}
+  - cd k8s && kustomize edit add secret gcp-config --from-literal=pubsub-topic=topic-${OKTETO_NAMESPACE} --from-literal=gcp-project-id=${GCP_PROJECT_ID}
   - kubectl apply -k k8s
 destroy:
   - tfenv install min-required
