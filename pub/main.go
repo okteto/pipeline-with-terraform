@@ -5,24 +5,16 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"sync"
 	"time"
 
 	"cloud.google.com/go/pubsub"
 )
 
 var (
-	topic *pubsub.Topic
-
-	// Messages received by this instance.
-	messagesMu sync.Mutex
-	messages   []string
-
+	topic              *pubsub.Topic
 	googleCloudProject = mustGetenv("GCP_PROJECT_ID")
 	topicName          = mustGetenv("PUBSUB_TOPIC")
 )
-
-const maxMessages = 10
 
 func main() {
 	ctx := context.Background()
@@ -35,13 +27,13 @@ func main() {
 
 	topic = client.Topic(topicName)
 
-	// Create the topic if it doesn't exist.
+	// Check topic already exists
 	exists, err := topic.Exists(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	if !exists {
-		log.Fatal("Topic %v doesn't exist")
+		log.Fatalf("Topic %s doesn't exist", topicName)
 	}
 
 	for counter := 0; ; counter++ {
@@ -61,13 +53,13 @@ func mustGetenv(k string) string {
 func publish(ctx context.Context, counter int) {
 
 	msg := &pubsub.Message{
-		Data: []byte(fmt.Sprintf("Counter %d", counter)),
+		Data: []byte(fmt.Sprintf("counter %d", counter)),
 	}
 
-	fmt.Printf("Publishing message %d...\n", counter)
+	log.Printf("Publishing message %d...", counter)
 	if _, err := topic.Publish(ctx, msg).Get(ctx); err != nil {
 		log.Fatalf("Could not publish message %d: %v", counter, err)
 	}
 
-	fmt.Println("Done!")
+	log.Print("Done!")
 }

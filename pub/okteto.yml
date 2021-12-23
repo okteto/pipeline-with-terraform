@@ -1,0 +1,14 @@
+name: pub
+image: okteto/golang:1
+command: bash
+sync:
+  - .:/usr/src/app
+volumes:
+  - /go/pkg/
+  - /root/.cache/go-build/
+forward:
+  - 2345:2345
+securityContext:
+  capabilities:
+    add:
+    - SYS_PTRACE
