@@ -1,6 +1,12 @@
 icon: https://github.com/okteto/pipeline-with-terraform/raw/main/icon.png
 deploy:
-  - echo "terraform apply"
+  - tfenv install min-required
+  - tfenv use min-required
+  - envsubst < template/terraform.auto.tfvars.tpl > terraform.auto.tfvars
+  - echo ${GCP_CREDENTIALS} | base64 -d > credentials.json
+  - terraform init -backend-config="bucket=${BUCKET}" -backend-config="prefix=pub-sub" -backend-config="credentials=credentials.json"
+  - terraform workspace ${OKTETO_NAMESPACE}
+  - terraform apply --auto-approve
   - okteto build -t okteto.dev/pub:${OKTETO_GIT_COMMIT} pub
   - okteto build -t okteto.dev/sub:${OKTETO_GIT_COMMIT} sub
   - cd pub/k8s && kustomize edit set image pub=okteto.dev/pub:${OKTETO_GIT_COMMIT}
@@ -9,3 +15,10 @@ deploy:
   - kubectl apply -k sub/k8s
 destroy:
   - echo "destroying"
+  - tfenv install min-required
+  - tfenv use min-required
+  - envsubst < template/terraform.auto.tfvars.tpl > terraform.auto.tfvars
+  - echo ${GCP_CREDENTIALS} | base64 -d > credentials.json
+  - terraform init -backend-config="bucket=${BUCKET}" -backend-config="prefix=pub-sub" -backend-config="credentials=credentials.json"
+  - terraform workspace ${OKTETO_NAMESPACE}
+  - terraform destroy --auto-approve
