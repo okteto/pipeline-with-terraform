@@ -18,7 +18,6 @@ var (
 	messagesMu sync.Mutex
 	messages   []string
 
-	// token is used to verify push requests.
 	googleCloudProject = mustGetenv("GCP_PROJECT_ID")
 	topicName          = mustGetenv("PUBSUB_TOPIC")
 )

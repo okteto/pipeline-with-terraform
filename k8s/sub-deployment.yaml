@@ -32,12 +32,12 @@ spec:
               key: pubsub-topic
         volumeMounts:
           - mountPath: "/etc/gcp"
-            name: gcp-config
+            name: gcp-credentials
             readOnly: true
       volumes:
-        - name: gcp-config
+        - name: gcp-credentials
           secret:
-            secretName: gcp-config
+            secretName: gcp-credentials
             items:
             - key: credentials.json
               path: sa.json
